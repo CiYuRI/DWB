@@ -19,7 +19,7 @@ def check_webhook_url(webhook_url: str) -> bool:
         return False
 
 
-st.title("Sayaka's DWB")
+st.title("Ciyuna's DWB")
 webhook_url = st.text_input("**Webhook URL:**")
 if not is_valid_webhook_url(webhook_url):
     st.warning("Please enter a valid Discord webhook URL.")
