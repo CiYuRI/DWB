@@ -26,7 +26,7 @@ if not is_valid_webhook_url(webhook_url):
 else:
     with st.spinner("Checking webhook URL..."):
         if check_webhook_url(webhook_url):
-            st.success("Webhook URL is valid, loading options...")
+            st.success("Webhook URL is valid")
             https_proxies, http_proxies = fetch_proxies()
             st.divider()
             st.subheader("Payload Config")
