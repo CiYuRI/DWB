@@ -19,7 +19,7 @@ def check_webhook_url(webhook_url: str) -> bool:
         return False
 
 
-st.title("Ciyuna's DWB")
+st.title("Sayaka's DWB")
 webhook_url = st.text_input("**Webhook URL:**")
 if not is_valid_webhook_url(webhook_url):
     st.warning("Please enter a valid Discord webhook URL.")
@@ -32,13 +32,19 @@ else:
             st.subheader('Payload Config')
             include_everyone = st.selectbox("**Ping options:**", ["None","@everyone", "@here"])
             message_content = st.text_input("**Message content:**")
-            names_func = st.selectbox("**Profile options**", ["UwU", "Chad"])
+            names_func = st.selectbox("**Profile options**", ["UwU", "Chad", "Custom"])
+            if names_func == "Custom":
+                custom_username = st.text_input("**Username:**")
+                custom_avatar_url = st.text_input("**Avatar URL:**")
+            else:
+                custom_username = None
+                custom_avatar_url = None
             delete_webhook = st.checkbox("Delete webhook after sending requests")
             st.divider()
-            num_requests = st.number_input("**Number of requests:**", min_value=1, max_value=1000, value=100)
+            num_requests = st.slider("**Number of requests:**", min_value=1, max_value=1000, value=100)
             if message_content == '' or num_requests < 1 or num_requests > 1000:
                 st.warning("Please fill in all of the options.")
-            elif st.button(f"Fetched {len(https_proxies) + len(http_proxies)} proxies. Proceed with {num_requests} requests?", key="proceed"):
+            elif st.button(f"Proceed with {num_requests} requests?", key="proceed"):
                 progress_bar = st.progress(0)
                 stop_button = st.button("Stop")
                 with st.spinner("Sending requests, please wait..."):
@@ -48,7 +54,13 @@ else:
                         rate_limit_count = 0
                         session = requests.Session()
                         for i in range(num_requests):
-                            name, pfp_url = uwupayload() if names_func == "UwU" else chadpayload()
+                            if names_func == "Custom":
+                                name = custom_username
+                                pfp_url = custom_avatar_url
+                            elif names_func == "UwU":
+                                name, pfp_url = uwupayload()
+                            else:
+                                name, pfp_url = chadpayload()
                             message_content_with_everyone = {"": message_content, "@everyone ": "@everyone ", "@here ": "@here "}.get(include_everyone, message_content)
                             payload = {"content": message_content_with_everyone, "username": name, "avatar_url": pfp_url}
                             proxies = https_proxies if i % 2 == 0 else http_proxies
@@ -91,6 +103,9 @@ else:
                 st.warning("Please click the button to proceed.")   
         else:
             st.warning("Webhook URL is invalid.")
+
+
+
 st.divider()
 st.subheader('Help Section')
 expander = st.expander("What is this DWB?")
@@ -105,7 +120,7 @@ expander = st.expander("How do I configure the message content?")
 expander.write("Type in the message you want to send! It's pretty simple, really.")
 
 expander = st.expander("What are profile options?")
-expander.write("The profile options are the name and avatar that will be used for the webhook. The \"UwU\" option will use cute names and anime avatars. The \"Chad\" option will use an alpha male name and avatar. More will be added in the future, and custom lists will be supported in the near future. Defaults to \"UwU\" automatically.")
+expander.write("The profile options are the name and avatar that will be used for the webhook. The \"UwU\" option will use cute names and anime avatars. The \"Chad\" option will use an alpha male name and avatar. The custom option will allow you to enter your own name and avatar URL. Defaults to \"UwU\" automatically.")
 
 expander = st.expander("What does the \"Delete webhook after sending requests\" option do?")
 expander.write("After sending your messages, the DWB will delete the webhook. This is useful if you want to send a lot of messages to a webhook, and then want to end the scamming. Defaults to \"Disabled\" automatically.")
