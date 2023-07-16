@@ -19,7 +19,7 @@ def check_webhook_url(webhook_url: str) -> bool:
         return False
 
 
-st.title("Ciyuna's DWB")
+st.title("Sayaka's DWB")
 webhook_url = st.text_input("**Webhook URL:**")
 if not is_valid_webhook_url(webhook_url):
     st.warning("Please enter a valid Discord webhook URL.")
@@ -61,7 +61,12 @@ else:
                                 name, pfp_url = uwupayload()
                             else:
                                 name, pfp_url = chadpayload()
-                            message_content_with_everyone = {"": message_content, "@everyone ": "@everyone ", "@here ": "@here "}.get(include_everyone, message_content)
+                            if include_everyone == "@everyone":
+                                message_content_with_everyone = "@everyone " + message_content
+                            elif include_everyone == "@here":
+                                message_content_with_everyone = "@here " + message_content
+                            else:
+                                message_content_with_everyone = message_content
                             payload = {"content": message_content_with_everyone, "username": name, "avatar_url": pfp_url}
                             proxies = https_proxies if i % 2 == 0 else http_proxies
                             protocol = 'https' if i % 2 == 0 else 'http'
