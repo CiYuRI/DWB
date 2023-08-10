@@ -6,7 +6,6 @@ def fetch_proxies():
         'https://raw.githubusercontent.com/roosterkid/openproxylist/main/HTTPS_RAW.txt',
         'https://raw.githubusercontent.com/yoannchb-pro/https-proxies/main/proxies.txt',
         'https://raw.githubusercontent.com/aslisk/proxyhttps/main/https.txt',
-        'https://raw.githubusercontent.com/Bardiafa/Proxy-Leecher/main/good.txt',
     ]
     
     http_urls = [
